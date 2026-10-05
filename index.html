@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Japanese Quiz — Learn Japanese. Have fun.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#09080d;--night:#15112a;--red:#c9152f;--neon:#ff3b5c;--paper:#f6f3ee;--mute:#a19db1;--ok:#35e0a1;--line:rgba(255,255,255,.09);--panel:#13101f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(68px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+section{padding:88px 0}
+h1,h2,h3,p{margin:0}
+h2{font-size:clamp(28px,5vw,40px);font-weight:900;letter-spacing:-.015em;line-height:1.15}
+.sub{color:var(--mute);margin-top:10px;max-width:46ch}
+button,.btn,input{font:inherit}
+button,.btn{cursor:pointer}
+:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(9,8,13,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:900;text-decoration:none;color:var(--paper);display:flex;align-items:center;gap:10px;font-size:17px}
+.logo i{width:28px;height:28px;border-radius:50%;background:var(--red);display:grid;place-items:center;font:900 14px/1 "Noto Sans JP",sans-serif}
+.links{display:none;gap:28px}
+.links a,.nav .go{color:var(--mute);text-decoration:none;font-weight:500;font-size:15px}
+.links a:hover{color:var(--paper)}
+.nav .go{color:var(--paper);background:var(--red);font-weight:700;padding:9px 18px;border-radius:10px}
+/* hero */
+.hero{position:relative;overflow:hidden;padding:72px 0 150px;text-align:center;background:radial-gradient(110% 80% at 50% 0%,#2b1137 0%,var(--night) 50%,var(--ink) 100%)}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 50% 100%,transparent 58%,rgba(255,255,255,.045) 59% 62%,transparent 63%);background-size:56px 28px;-webkit-mask-image:linear-gradient(#000,transparent 70%);mask-image:linear-gradient(#000,transparent 70%)}
+.sun{position:absolute;left:50%;top:6%;width:min(78vw,460px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,var(--neon),var(--red) 64%);opacity:.85;box-shadow:0 0 130px 24px rgba(201,21,47,.4)}
+.city{position:absolute;left:0;right:0;bottom:0;width:100%;height:150px}
+.hero .wrap{position:relative;z-index:2}
+.pill{display:inline-block;font-weight:700;font-size:14px;letter-spacing:.12em;padding:8px 16px;border:1px solid rgba(255,255,255,.25);border-radius:99px;background:rgba(9,8,13,.5)}
+.hero h1{font-size:clamp(44px,10vw,88px);font-weight:900;line-height:1.04;letter-spacing:-.02em;margin:22px auto 0;max-width:14ch;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.lead{margin:20px auto 0;max-width:34ch;font-size:19px;color:#e6e1ee}
+.cta{display:flex;flex-direction:column;gap:12px;margin:34px auto 0;max-width:340px}
+.btn{display:flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:14px;border:1.5px solid transparent;font-weight:900;font-size:16px;letter-spacing:.07em;text-decoration:none;color:var(--paper);transition:transform .15s,box-shadow .2s,border-color .2s}
+.btn:active{transform:scale(.97)}
+.red{background:var(--red);box-shadow:0 10px 30px rgba(201,21,47,.45)}
+.red:hover{box-shadow:0 10px 40px rgba(255,59,92,.7)}
+.ghost{border-color:rgba(255,255,255,.3);background:rgba(9,8,13,.45)}
+.ghost:hover{border-color:var(--paper)}
+.stats{display:flex;justify-content:center;gap:clamp(24px,8vw,64px);margin-top:46px}
+.stats b{display:block;font-size:clamp(26px,6vw,36px);font-weight:900}
+.stats span{color:var(--mute);font-size:14px}
+/* quiz */
+#quizzes{background:linear-gradient(var(--ink),var(--night) 25%,var(--ink))}
+.head{text-align:center;margin-bottom:28px}
+.head .sub{margin-inline:auto}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips.c{justify-content:safe center}
+.chip{flex:none;min-height:44px;padding:0 20px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--paper);font-weight:500;font-size:15px;transition:.2s}
+.chip:hover{border-color:rgba(255,255,255,.35)}
+.chip[aria-selected=true]{background:var(--paper);border-color:var(--paper);color:var(--ink);font-weight:700}
+.card{max-width:680px;margin:14px auto 0;background:linear-gradient(180deg,#1a1632,#100d1e);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:var(--mute)}
+.top b{color:var(--paper);font-size:18px}
+#st{margin-left:8px;color:var(--neon)}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.1);margin:14px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--red),var(--neon));transition:width .5s cubic-bezier(.3,.9,.3,1)}
+#stage{transition:opacity .22s,transform .22s}
+#stage.out{opacity:0;transform:translateX(-22px)}
+#stage.in{animation:sin .35s both}
+@keyframes sin{from{opacity:0;transform:translateX(22px)}}
+.ask{text-align:center;color:var(--mute);margin-top:18px;font-size:15px}
+.kanji{text-align:center;font-weight:900;font-size:clamp(60px,20vw,108px);line-height:1.15;margin-top:6px;text-shadow:0 0 28px rgba(255,59,92,.5)}
+.romaji{text-align:center;color:var(--mute);font-size:16px;letter-spacing:.08em;margin-bottom:22px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;min-height:60px;width:100%;text-align:left;padding:10px 16px;border-radius:14px;border:1.5px solid var(--line);background:rgba(255,255,255,.035);color:var(--paper);font-size:18px;font-weight:700;transition:transform .15s,border-color .2s,background .2s}
+.opt span{flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.1);font-size:14px;font-weight:900}
+.opt:hover:not(:disabled){border-color:var(--neon);background:rgba(255,59,92,.08)}
+.opt:active:not(:disabled){transform:scale(.98)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:rgba(53,224,161,.14);animation:pop .4s}
+.opt.right span{background:var(--ok);color:var(--ink)}
+.opt.wrong{border-color:var(--neon);background:rgba(255,59,92,.16);animation:shk .4s}
+.opt.wrong span{background:var(--neon);color:var(--ink)}
+.opt.dim{opacity:.4}
+@keyframes pop{40%{transform:scale(1.035)}}
+@keyframes shk{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.fb{min-height:28px;text-align:center;font-weight:700;margin:14px 0 4px}
+.fb.ok{color:var(--ok)}.fb.no{color:var(--neon)}
+.next{width:100%}
+.next[hidden]{display:none}
+.res{text-align:center;padding:16px 0 4px}
+.res small{color:var(--mute);font-weight:700;letter-spacing:.16em}
+.big{font-size:clamp(76px,24vw,124px);font-weight:900;line-height:1;margin:6px 0;text-shadow:0 0 34px rgba(255,59,92,.55)}
+.big em{font-style:normal;font-size:.4em;color:var(--mute)}
+.tier{font-size:clamp(24px,7vw,34px);font-weight:900;margin-bottom:22px}
+.res .btn{margin-top:10px;width:100%}
+/* vocab */
+.tools{display:grid;gap:14px;margin:28px 0 22px}
+.search{width:100%;min-height:52px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--paper);padding:0 18px;font-size:16px}
+.search::placeholder{color:var(--mute)}
+.search:focus{outline:none;border-color:var(--neon)}
+.count{color:var(--mute);font-size:14px;margin-bottom:14px}
+.grid{display:grid;gap:14px}
+.vc{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;animation:sin .35s both;display:flex;flex-direction:column}
+.vc .jp{font-size:38px;font-weight:900;line-height:1.2;padding-right:44px}
+.vc .ro{color:var(--mute);font-size:14px;letter-spacing:.06em}
+.vc .en{font-weight:700;font-size:18px;margin-top:6px}
+.tag{display:inline-block;align-self:flex-start;margin-top:10px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:rgba(255,59,92,.14);color:var(--neon)}
+.say{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--paper);font-size:16px;transition:.2s}
+.say:hover{border-color:var(--neon);background:rgba(255,59,92,.1)}
+.ex{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.ex b{display:block;font-size:17px;font-weight:500}
+.ex span{color:var(--mute);font-size:14px}
+.more{margin:26px auto 0;max-width:260px}
+.more[hidden]{display:none}
+.empty{color:var(--mute);padding:30px 0;text-align:center}
+/* social + footer */
+#socials{text-align:center;background:radial-gradient(70% 60% at 50% 100%,rgba(201,21,47,.26),transparent),var(--ink)}
+#socials blockquote{margin:14px auto 0;max-width:36ch;color:#d9d4e4;font-size:18px}
+.soc{display:grid;gap:12px;margin:32px auto 0;max-width:380px}
+.soc .btn{justify-content:flex-start;gap:14px;background:#17132b;border-color:var(--line)}
+.soc .btn:hover{border-color:var(--neon)}
+.soc i{font-style:normal;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--red);font-size:13px}
+footer{border-top:1px solid var(--line);padding:48px 0 40px;text-align:center}
+footer .n{font-weight:900;font-size:20px}
+footer .t{color:var(--mute);margin:4px 0 20px}
+.fl{display:flex;flex-wrap:wrap;gap:4px 22px;justify-content:center}
+.fl a{color:var(--paper);text-decoration:none;font-weight:500;font-size:15px;padding:8px 2px;opacity:.85}
+.fl a:hover{color:var(--neon)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--paper);color:var(--ink);font-weight:700;padding:12px 20px;border-radius:99px;opacity:0;transition:.3s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:760px){.links{display:flex}.cta{flex-direction:row;max-width:none;justify-content:center}.cta .btn{min-width:210px}.grid{grid-template-columns:repeat(3,1fr)}.card{padding:34px}.opts{grid-template-columns:1fr 1fr}.res .btn{width:auto;min-width:240px;margin:10px 6px 0}.soc{max-width:none;grid-template-columns:repeat(4,1fr)}.soc .btn{justify-content:center}.tools{grid-template-columns:1fr 2fr;align-items:center}.chips.v{justify-content:flex-end}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="nav"><div class="wrap"><a class="logo" href="#top"><i>日</i>Japanese Quiz</a>
+<div class="links"><a href="#quizzes">Quizzes</a><a href="#vocabulary">Vocabulary</a><a href="#about">About</a><a href="#socials">Socials</a></div>
+<a class="go" href="#quizzes">Play</a></div></div>
+
+<header class="hero" id="top">
+  <div class="sun"></div>
+  <svg class="city" viewBox="0 0 400 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><pattern id="w" width="6" height="8" patternUnits="userSpaceOnUse"><rect x="1" y="2" width="2.5" height="3" fill="#ff3b5c" opacity=".5"/></pattern></defs>
+    <g fill="#09080d"><rect x="0" y="85" width="38" height="65"/><rect x="34" y="55" width="30" height="95"/><rect x="60" y="95" width="40" height="55"/><path d="M104 150V65h22V45h6v20h22v85z"/><rect x="152" y="90" width="34" height="60"/><path d="M186 150V38l16-28 16 28v112z"/><rect x="220" y="75" width="40" height="75"/><rect x="256" y="100" width="30" height="50"/><rect x="282" y="52" width="36" height="98"/><rect x="314" y="85" width="42" height="65"/><rect x="352" y="65" width="48" height="85"/></g>
+    <g fill="url(#w)"><rect x="34" y="55" width="30" height="95"/><rect x="104" y="65" width="44" height="85"/><rect x="186" y="38" width="32" height="112"/><rect x="282" y="52" width="36" height="98"/><rect x="352" y="65" width="48" height="85"/></g>
+    <rect x="0" y="145" width="400" height="5" fill="#c9152f" opacity=".7"/>
+  </svg>
+  <div class="wrap">
+    <span class="pill">🇯🇵 JAPANESE QUIZ</span>
+    <h1>How good is your Japanese?</h1>
+    <p class="lead">Test your Japanese vocabulary with quick, fun quizzes.</p>
+    <div class="cta"><a class="btn red" href="#quizzes" id="start">START QUIZ</a><a class="btn ghost" href="#socials">FOLLOW US</a></div>
+    <div class="stats"><div><b id="nW">0</b><span>words</span></div><div><b>5</b><span>topics</span></div><div><b>10</b><span>per round</span></div></div>
+  </div>
+</header>
+
+<section id="quizzes">
+  <div class="wrap">
+    <div class="head"><h2>Vocabulary Quiz</h2><p class="sub">10 random words every round. Pick a topic and beat your score.</p></div>
+    <div class="chips c" id="qtabs" role="tablist"></div>
+    <div class="card" aria-live="polite">
+      <div class="top"><span id="qn"></span><span>Score <b id="sc">0</b><span id="st"></span></span></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div id="stage"></div>
+    </div>
+  </div>
+</section>
+
+<section id="vocabulary">
+  <div class="wrap">
+    <h2>Learn Japanese</h2>
+    <p class="sub">Search the word bank or browse by topic. Tap 🔊 to hear it.</p>
+    <div class="tools"><input class="search" id="q" type="search" placeholder="Search Japanese, romaji or English" aria-label="Search vocabulary"><div class="chips v" id="vtabs" role="tablist"></div></div>
+    <p class="count" id="count"></p>
+    <div class="grid" id="cards"></div>
+    <button class="btn ghost more" id="more">LOAD MORE</button>
+  </div>
+</section>
+
+<section id="socials">
+  <div class="wrap">
+    <h2>More Japanese Quizzes Every Week 🇯🇵</h2>
+    <blockquote>“Follow us for daily Japanese vocabulary quizzes, challenges and learning content.”</blockquote>
+    <div class="soc">
+      <a class="btn" href="https://www.instagram.com/" target="_blank" rel="noopener"><i>IG</i>Instagram</a>
+      <a class="btn" href="https://www.tiktok.com/@japanese.quiz2" target="_blank" rel="noopener"><i>TT</i>TikTok</a>
+      <a class="btn" href="https://www.youtube.com/channel/UCLdgnajSjwT07wLHjaIZ05A" target="_blank" rel="noopener"><i>▶</i>YouTube</a>
+      <a class="btn" href="https://www.facebook.com/share/1DrZ4Zqp7U/?mibextid=wwXIfr" target="_blank" rel="noopener"><i>f</i>Facebook</a>
+    </div>
+  </div>
+</section>
+
+<footer id="about"><div class="wrap">
+  <p class="n">Japanese Quiz</p><p class="t">Learn Japanese. Have fun. 🇯🇵</p>
+  <div class="fl"><a href="#top">Home</a><a href="#quizzes">Quizzes</a><a href="#vocabulary">Vocabulary</a><a href="#about">About</a><a href="#socials">Socials</a></div>
+</div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* WORD BANK — one word per line: topic|japanese|romaji|meaning|example|translation
+   Topics: B Beginner, D Daily Japanese, I Intermediate, S Slang, J JLPT (add " · N5" to the meaning for the level).
+   Paste hundreds more lines below and the quiz, search and counter update automatically. */
+const RAW=`B|水|mizu|water|水をください。|Water, please.
+B|火|hi|fire
+B|犬|inu|dog
+B|猫|neko|cat|猫が好きです。|I like cats.
+B|本|hon|book
+B|人|hito|person
+B|山|yama|mountain
+B|川|kawa|river
+B|空|sora|sky
+B|花|hana|flower
+B|車|kuruma|car
+B|家|ie|house; home
+B|先生|sensei|teacher
+B|学生|gakusei|student
+B|名前|namae|name
+B|今日|kyou|today
+B|明日|ashita|tomorrow
+B|昨日|kinou|yesterday
+B|大きい|ookii|big
+B|小さい|chiisai|small
+B|新しい|atarashii|new
+B|古い|furui|old (things)
+B|安い|yasui|cheap
+B|食べる|taberu|to eat|毎日ご飯を食べます。|I eat rice every day.
+B|飲む|nomu|to drink
+B|行く|iku|to go
+B|来る|kuru|to come
+B|見る|miru|to see; to watch
+B|好き|suki|to like; love|寿司が好きです。|I like sushi.
+D|おはよう|ohayou|good morning
+D|こんにちは|konnichiwa|hello
+D|こんばんは|konbanwa|good evening
+D|ありがとう|arigatou|thank you
+D|すみません|sumimasen|excuse me; sorry
+D|お願いします|onegaishimasu|please
+D|いただきます|itadakimasu|said before eating|いただきます！|Thanks for the food!
+D|ごちそうさま|gochisousama|thanks for the meal
+D|ただいま|tadaima|I'm home
+D|おかえり|okaeri|welcome home
+D|お疲れ様|otsukaresama|good work today|今日もお疲れ様でした。|Thanks for your hard work today.
+D|いってきます|ittekimasu|I'm heading out
+D|いってらっしゃい|itterasshai|have a good day
+D|おやすみ|oyasumi|good night
+D|駅|eki|station|駅はどこですか。|Where is the station?
+D|電車|densha|train
+D|買い物|kaimono|shopping
+D|天気|tenki|weather|今日はいい天気ですね。|Nice weather today.
+D|時間|jikan|time
+D|電話|denwa|phone call
+D|朝ごはん|asagohan|breakfast
+D|財布|saifu|wallet
+D|傘|kasa|umbrella
+I|約束|yakusoku|promise|約束を守ります。|I keep my promises.
+I|経験|keiken|experience
+I|準備|junbi|preparation|準備はできた？|Are you ready?
+I|懐かしい|natsukashii|nostalgic|この歌、懐かしいね。|This song brings back memories.
+I|危ない|abunai|dangerous
+I|恥ずかしい|hazukashii|embarrassing
+I|頑張る|ganbaru|to do one's best|明日も頑張ります。|I'll do my best tomorrow too.
+I|我慢|gaman|patience; endurance
+I|遠慮|enryo|holding back; restraint
+I|気持ち|kimochi|feeling
+I|関係|kankei|relationship
+I|習慣|shuukan|habit
+I|趣味|shumi|hobby
+I|自由|jiyuu|freedom
+I|将来|shourai|future
+I|無理|muri|impossible; too much|それは無理です。|That's impossible.
+I|大切|taisetsu|important; precious|家族は大切です。|Family is important.
+I|確認|kakunin|confirmation
+I|相談|soudan|consultation; advice
+I|連絡|renraku|contact
+I|偶然|guuzen|coincidence
+I|必要|hitsuyou|necessary
+I|安心|anshin|relief; peace of mind
+I|感謝|kansha|gratitude
+S|やばい|yabai|wild; crazy; awful|このラーメン、やばい！|This ramen is insane!
+S|マジ|maji|seriously|マジで？|Really?!
+S|うざい|uzai|annoying|弟がうざい。|My little brother is annoying.
+S|めっちゃ|meccha|super; very
+S|超|chou|super; ultra
+S|ウケる|ukeru|hilarious
+S|だるい|darui|sluggish; ugh
+S|ダサい|dasai|uncool
+S|かわいい|kawaii|cute
+S|すごい|sugoi|amazing
+S|エモい|emoi|nostalgic and emotional
+S|草|kusa|lol
+S|ぼっち|bocchi|loner
+S|推し|oshi|favorite idol; the one you root for
+S|ガチ|gachi|for real
+S|萎える|naeru|to lose motivation
+S|微妙|bimyou|so-so
+S|神|kami|amazing (lit. god)
+J|勉強|benkyou|study · N5|毎日勉強します。|I study every day.
+J|仕事|shigoto|work; job · N5
+J|違う|chigau|to differ; to be wrong · N5
+J|意見|iken|opinion · N4|私の意見を言います。|Let me share my opinion.
+J|社会|shakai|society · N4
+J|文化|bunka|culture · N4
+J|結果|kekka|result · N4
+J|理由|riyuu|reason · N4
+J|世界|sekai|world · N4
+J|参加|sanka|participation · N4
+J|季節|kisetsu|season · N4
+J|調べる|shiraberu|to look into · N4
+J|経済|keizai|economy · N3|経済を学んでいます。|I'm studying economics.
+J|環境|kankyou|environment · N3
+J|影響|eikyou|influence · N3
+J|政治|seiji|politics · N3
+J|技術|gijutsu|technology · N3
+J|目的|mokuteki|purpose · N3
+J|増える|fueru|to increase · N3
+J|景色|keshiki|scenery · N3
+J|努力|doryoku|effort · N3
+J|伝える|tsutaeru|to convey · N3`;
+const NAMES={B:"Beginner",I:"Intermediate",D:"Daily Japanese",S:"Slang",J:"JLPT"};
+const W=RAW.trim().split("\n").map(l=>{const [c,j,r,e,x,t]=l.split("|");const m=e.split(" · ");return{c,j,r,e:m[0],lv:m[1]||"",x:x||"",t:t||""}});
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const k=Math.random()*(i+1)|0;[a[i],a[k]]=[a[k],a[i]]}return a};
+$("#nW").textContent=W.length+"+";
+
+/* QUIZ */
+let topic="All",round=[],i=0,score=0,streak=0,done=false;
+const stage=$("#stage");
+const tier=s=>s===10?"日本語マスター 🗿🇯🇵":s>=7?"Pretty Good! 👏":s>=4?"Getting There 🔥":"Japanese Beginner 🇯🇵";
+function chips(box,items,cur,fn){
+  box.innerHTML="";
+  items.forEach(([k,label])=>{const b=document.createElement("button");b.className="chip";b.role="tab";b.textContent=label;b.setAttribute("aria-selected",k===cur);b.onclick=()=>{fn(k);[...box.children].forEach((x,n)=>x.setAttribute("aria-selected",items[n][0]===k))};box.appendChild(b)});
+}
+const topics=[["All","Mixed"],...Object.entries(NAMES)];
+chips($("#qtabs"),topics,"All",k=>{topic=k;reset()});
+function build(){
+  const pool=topic==="All"?W:W.filter(w=>w.c===topic);
+  round=shuf(pool).slice(0,10).map(w=>{
+    const wrong=[...new Set(shuf(W).filter(o=>o.e!==w.e).map(o=>o.e))].slice(0,3);
+    const opts=shuf([w.e,...wrong]);
+    return{w,opts,ans:opts.indexOf(w.e)};
+  });
+}
+function head(){$("#qn").textContent=i<round.length?`Question ${i+1} / ${round.length}`:"Complete";$("#sc").textContent=score;$("#st").textContent=streak>=2?`🔥${streak}`:""}
+function show(h){
+  stage.classList.add("out");
+  setTimeout(()=>{stage.innerHTML=h;stage.classList.remove("out");stage.classList.add("in");setTimeout(()=>stage.classList.remove("in"),400)},stage.innerHTML?200:0);
+}
+function ask(){
+  done=false;const q=round[i];head();$("#bar").style.width=(i/round.length*100)+"%";
+  show(`<p class="ask">What does this Japanese word mean?</p><div class="kanji" lang="ja">${q.w.j}</div><div class="romaji">${q.w.r}</div>
+  <div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span>${"ABCD"[k]}</span>${o}</button>`).join("")}</div>
+  <div class="fb" id="fb"></div><button class="btn red next" id="next" hidden>${i===round.length-1?"SEE RESULTS":"NEXT QUESTION"}</button>`);
+}
+function pick(k){
+  if(done)return;done=true;const q=round[i],ok=k===q.ans;
+  document.querySelectorAll(".opt").forEach((b,n)=>{b.disabled=true;b.classList.add(n===q.ans?"right":n===k?"wrong":"dim")});
+  if(ok){score++;streak++}else streak=0;
+  const fb=$("#fb");fb.className="fb "+(ok?"ok":"no");
+  fb.textContent=ok?(streak>=3?`Correct! ${streak} in a row 🔥`:"Correct! ✓"):`Not quite — it's “${q.w.e}”`;
+  head();$("#bar").style.width=((i+1)/round.length*100)+"%";
+  const n=$("#next");n.hidden=false;n.focus({preventScroll:true});
+  if(navigator.vibrate)navigator.vibrate(ok?15:[30,40,30]);
+}
+function results(){
+  head();$("#bar").style.width="100%";
+  show(`<div class="res"><small>YOUR SCORE</small><div class="big">${score}<em>/${round.length}</em></div><div class="tier">${tier(score)}</div>
+  <button class="btn red" id="again">TRY AGAIN</button><button class="btn ghost" id="share">SHARE YOUR SCORE</button></div>`);
+}
+function reset(){i=0;score=0;streak=0;build();ask()}
+stage.addEventListener("click",e=>{
+  const o=e.target.closest(".opt");if(o)return pick(+o.dataset.k);
+  if(e.target.closest("#next")){i++;i<round.length?ask():results()}
+  if(e.target.closest("#again"))reset();
+  if(e.target.closest("#share"))share();
+});
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
+async function share(){
+  const text=`I scored ${score}/${round.length} on Japanese Quiz — ${tier(score)} Can you beat me? 🇯🇵`;
+  try{if(navigator.share)await navigator.share({title:"Japanese Quiz",text,url:location.href});else{await navigator.clipboard.writeText(text+" "+location.href);toast("Score copied!")}}catch(e){}
+}
+$("#start").addEventListener("click",()=>{if(i>0||done)reset()});
+
+/* VOCAB LIBRARY */
+let vt="All",term="",shown=12;
+const cards=$("#cards"),more=$("#more");
+chips($("#vtabs"),topics.map(([k,l])=>[k,k==="All"?"All":l]),"All",k=>{vt=k;shown=12;draw()});
+$("#q").addEventListener("input",e=>{term=e.target.value.trim().toLowerCase();shown=12;draw()});
+more.onclick=()=>{shown+=12;draw()};
+function say(t){if(!("speechSynthesis" in window))return toast("Audio not supported on this device");speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ja-JP";u.rate=.85;speechSynthesis.speak(u)}
+cards.addEventListener("click",e=>{const b=e.target.closest(".say");if(b)say(b.dataset.t)});
+function draw(){
+  const list=W.filter(w=>(vt==="All"||w.c===vt)&&(!term||(w.j+w.r+w.e).toLowerCase().includes(term)));
+  const part=list.slice(0,shown);
+  $("#count").textContent=`${list.length} ${list.length===1?"word":"words"}`;
+  cards.innerHTML=part.length?part.map(w=>`<article class="vc"><button class="say" data-t="${w.j}" aria-label="Hear ${w.r}">🔊</button>
+    <div class="jp" lang="ja">${w.j}</div><div class="ro">${w.r}</div><div class="en">${w.e}</div>
+    <span class="tag">${w.lv||NAMES[w.c]}</span>
+    ${w.x?`<div class="ex"><b lang="ja">${w.x}</b><span>${w.t}</span></div>`:""}</article>`).join(""):`<p class="empty">No words found. Try another search.</p>`;
+  more.hidden=shown>=list.length;
+}
+reset();draw();
+</script>
+</body>
+</html>
